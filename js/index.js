@@ -1,6 +1,7 @@
 
 let showMovies_id =document.getElementById("showMovies")
 let pagination_id =document.getElementById("pagination")
+let showGenres_id =document.getElementById("showGenres")
 
 let api_key = `?api_key=2254f6a103ea45b2d2965212918395da`
 let b_url = `https://api.themoviedb.org/3/`
@@ -8,23 +9,64 @@ let end_point = `discover/movie`
 let img_endPoint = `https://image.tmdb.org/t/p/w500/`
 let url = `https://api.themoviedb.org/3/discover/movie?api_key=2254f6a103ea45b2d2965212918395da`
 
+let genarr = JSON.parse(localStorage.getItem("genarr")) || []
+
+let genre_end_point = `genre/movie/list`;
+let genre_api_url = b_url+genre_end_point+api_key;
+
 
 let page =1
-let api_url = b_url+end_point+api_key+`&page=`+page
+let api_url = b_url+end_point+api_key+`&page=`+page+`&with_genres=${genarr.join(",")}`
 
+getMovies(genre_api_url)
 getMovies(api_url)
+showPagination(data)
 
-function getMovies(api_url){
+function getMovies(api){
     
-    fetch(api_url)
+    fetch(api)
     .then((res) => res.json())
     .then((data) =>{
-        console.log(data)
+
+        if(data.genres){
+            // console.log(data)
+            showGenres(data)
+            showPagination(data)
+            // changeGenres(data.id)
+        }
+
+        else if(data.results){
         showMovies(data)
         showPagination(data)
+        }
+        // console.log(data)
+    
+        else{
+            console.log("this is for lang")
+        }
     })
 }
 
+
+function changeGenres(id){
+
+
+    if(genarr.includes(id)){
+        genarr.splice(genarr.indexOf(id) , 1)
+    }
+    else{
+        genarr.push(id)
+    }
+
+    localStorage.setItem("genarr",JSON.stringify(genarr))
+
+    console.log(genarr)
+
+    let genres_movei_api_url = b_url+end_point+api_key+`&page=`+page+`&with_genres=`+genarr.join("|")
+
+    getMovies(genre_api_url)
+    getMovies(genres_movei_api_url);
+}
 
 function changePage(page_changed){
     console.log(page_changed)
@@ -54,6 +96,10 @@ function showMovies(data){
         </div>
         `
     })
+
+    getMovies(genre_api_url)
+
+
 }
 
 
@@ -70,3 +116,18 @@ function showPagination(data){
 </nav>
     `
 }
+
+function showGenres(data)
+{
+    showGenres_id.innerHTML = "";
+
+    data.genres.map((ele) => {
+        showGenres_id.innerHTML +=
+         `
+         <div class="col"><button class="btn ${genarr.includes(ele.id) ?`btn-warning ` : `btn-outline-warning`}" onclick="changeGenres(${ele.id})">${ele.name}</button></div>
+         `
+    })
+
+    
+}
+
