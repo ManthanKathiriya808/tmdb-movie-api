@@ -18,7 +18,7 @@ function showData(data){
    
     show_movies.innerHTML +=`
     <div class="col ">
-            <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" alt="">
+            <img src="https://image.tmdb.org/t/p/w500${data.poster_path}" class="rounded-5" alt="">
          
         </div>
     <div class="col d-flex flex-column h-100 my-auto p-5  ">
@@ -26,6 +26,10 @@ function showData(data){
             <h4>Overviews 👉🏻: ${data.overview}</h4>
             <h4>Genres 👉🏻: ${data.genres.map((ele) => ele.name )}</h4>
         </div>
+    <div class="col-12 mt-5 ">
+  <iframe width="100%" height="500px" src="https://www.youtube.com/embed/${data.videos.results[0].key}" class="rounded-5" frameborder="0" allowfullscreen></iframe>
+    
+    </div>
 `
 
 }

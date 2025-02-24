@@ -28,7 +28,7 @@ export function showMovies(data){
                      || ele.original_title}</h5>
                   <p class="card-text">${ele.release_date
                   }</p>
-                  <a href="#" class="btn btn-primary vd">View Details</a>
+                  <a href="mov.html" class="btn btn-primary vd">View Details</a>
                 </div>
               </div>
         </div>
